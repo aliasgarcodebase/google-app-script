@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script>
+      // Prevent forms from submitting.
+      function preventFormSubmit() {
+        var forms = document.querySelectorAll('form');
+        for (var i = 0; i < forms.length; i++) {
+          forms[i].addEventListener('submit', function(event) {
+            event.preventDefault();
+          });
+        }
+      }
+      window.addEventListener('load', preventFormSubmit);
+
+      function handleFormSubmit() {
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        //alert(email);
+        //alert(password);
+        google.script.run.withSuccessHandler(onSuccess)
+          .submitForm(email,password);
+      }
+      function onSuccess(responseMessage)
+      {
+        //alert(responseMessage);
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('responseMessage').innerHTML = responseMessage;
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container">
+    <form id="myForm" onsubmit="handleFormSubmit()">
+      <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" required class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" required class="form-control" id="password" placeholder="Password">
+          </div>
+      <input type="submit" value="Submit" class="btn btn-primary" />
+    </form>
+    <div id="responseMessage"></div>
+    </div>
+ </body>
+</html>
