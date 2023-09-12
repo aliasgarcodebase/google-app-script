@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <title>GetParallel Data</title>
+    <style>
+      .parallel-button {
+         background-color:#7F9376;
+         border:none;
+         color : white;
+        }
+        .paragraph {
+          color:#999999;
+          font-size:14px;
+          font-weight:400;
+        }
+        .mt-10{
+          margin-top:10px;
+        }
+    </style>
+    <script>
+      // Prevent forms from submitting.
+      function preventFormSubmit() {
+        var forms = document.querySelectorAll('form');
+        for (var i = 0; i < forms.length; i++) {
+          forms[i].addEventListener('submit', function(event) {
+            event.preventDefault();
+          });
+        }
+      }
+      window.addEventListener('load', preventFormSubmit);
+
+      google.script.run.withSuccessHandler(function(value) {
+         document.getElementById('responseMessage').innerHTML = value;
+        }).getValueFromProperties('message');
+
+      function onSuccess()
+      {
+        google.script.run.withSuccessHandler(function(value) {
+        document.getElementById('responseMessage').innerHTML = value;
+        }).getValueFromProperties('message');
+      }
+      function onSubmit()
+      {
+        var row = document.getElementById('row').value;
+        google.script.run.withSuccessHandler(onSuccess)
+          .fetchData(row);
+      }
+
+      function logout()
+      {
+        google.script.run.withSuccessHandler(function(value) {
+        }).logout();
+
+      }
+      
+    </script>
+  </head>
+  <body>
+    <div class="container mt-10">
+      <div>Data to sync 
+        <button type="button" class="btn btn-secondary" onclick="logout();">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"></path>
+  <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"></path>
+</svg>
+              </button>
+      </div>
+            
+            <span class="paragraph">Data will be imported on a daily basis. Select a new tab so that Parallel does not override your existing data.</span>
+      <form onsubmit="onSubmit();" class="mt-10">
+          <div class="form-group">
+            <label for="row">Cell Import Location</label><br>
+            <input type="text" required class="form-control" id="row" placeholder="‘Data Dump’!A1">
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn parallel-button btn-lg btn-block">Import</button>
+          </div>
+      </form>
+      <div style="margin-top:5px;color:green;" id="responseMessage"></div>
+    </div>
+  </body>
+</html>

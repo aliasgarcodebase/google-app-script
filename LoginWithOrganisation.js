@@ -26,13 +26,15 @@ try{
   var accessToken = responseData.data.accessToken;
 
   organisationId = getOrganisationId(accessToken);
+
   //organisationId = 4;
   //console.log(accessToken);
   var response = {
     success: true,
     token : accessToken,
     organisation : organisationId,
-    message : 'Login successful and your api key is : '+accessToken+ ' and your organisation id is : ' + organisationId 
+    message : '<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> your API key is : '+accessToken+ ' and your organisation id is : ' + organisationId+'</div>',
+    //message : 'Login successful and your api key is : '+accessToken+ ' and your organisation id is : ' + organisationId 
   };
 
   return response;
@@ -41,7 +43,8 @@ try{
   var response = {
     success: false,
     token : '',
-    message : 'Unable to authenticate'
+    message : '<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Failed!</strong> Unable to Authenticate</div>',
+    //message : 'Unable to Authenticate'
   };
   //console.log('Unable to authenticate');
   //return 'Unable to authenticate';

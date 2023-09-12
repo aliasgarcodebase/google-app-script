@@ -17,6 +17,8 @@ function getData(accessToken,organisation,row) {
   };
   Logger.log(response);
 
+  setAuthToken('message','<div class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> Data Inserted successfully</div>'); // Setting message in cookies
+  
   displayEntireData(JSON.parse(apiResponse).data,row);
   }
   catch(error)
@@ -27,6 +29,7 @@ function getData(accessToken,organisation,row) {
     data : ''
   };
   Logger.log(response);
+  setAuthToken('message','<div class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Failed!</strong> Invalid request</div>'); // Setting message in cookies
   }
 
   //return response;

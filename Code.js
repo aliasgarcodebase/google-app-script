@@ -14,26 +14,82 @@ function onOpen(e) {
  * Shows the sidebar
  */
 function showSidebar() {
-  //const myHttpOutput = HtmlService.createHtmlOutputFromFile('Index').setTitle('Get Your Parallel Data')
-  const myHttpOutput =  HtmlService.createHtmlOutputFromFile('Auth').setTitle('Get Your Data');
+  //clearAuthToken('token');
+  //clearAuthToken('organisation');
+
+  // Checking if token and organisation is set or not for this user
+  var token = getAuthToken('token');
+  var organisation = getAuthToken('organisation');
+
+  if (token && organisation) {
+    // Use authToken for authentication
+    //SpreadsheetApp.getUi().alert('If condition');
+    var myHttpOutput =  HtmlService.createHtmlOutputFromFile('DataImport').setTitle('Parallel for Google Spread Sheet');
+  } else {
+    // No authToken found, handle accordingly
+    //SpreadsheetApp.getUi().alert('Else condition');
+    var myHttpOutput =  HtmlService.createHtmlOutputFromFile('Auth').setTitle('Parallel for Google Spread Sheet'); 
+  }
+
+
   SpreadsheetApp.getUi().showSidebar(myHttpOutput);
   
 }
 
-function formatData() {
- var data = [];
- for(var i =0; i < 5; i++) {
-   data.push([Math.random(), Math.random()]);
- }
- //data.push([email,number]);
- return data;
+function logout()
+{
+  clearAuthToken('token');
+  clearAuthToken('organisation');
+  clearAuthToken('message');
+  showSidebar();
 }
 
-function getHeader()
+function connectAuthentication()
 {
-  var data = [];
-  data.push(['Email Address','Phone Number']);
-  return data;
+  var email = 'test+growth@getparallel.com';
+  var password = 'Password123!';
+  var responseMessage = loginWithOrganisation(email,password);
+  if(responseMessage.success == true)
+      {
+
+        //getData(responseMessage.token,responseMessage.organisation,row)
+        setAuthToken('token',responseMessage.token); // Setting token in cookies
+        setAuthToken('organisation',responseMessage.organisation); // Setting organisation id in cookies
+        //setAuthToken('message',responseMessage.message); // Setting message in cookies
+      }
+      setAuthToken('message',responseMessage.message); // Setting message in cookies
+      // Calling sidebar for getting updated HTML
+      showSidebar();
+      
+      //return responseMessage;
+}
+
+/*function setAuthentication()
+{
+  var randomToken = generateRandomToken(32);
+  setAuthToken(randomToken);
+  showSidebar();
+}*/
+
+// Fetch data
+function fetchData(row)
+{
+    var token = getValueFromProperties('token');
+    var organisation = getValueFromProperties('organisation');
+    var row = row;
+    getData(token,organisation,row)
+}
+
+// Google authentication
+function getAuth(){
+  //SpreadsheetApp.getUi().alert("get auth function called");
+  const authInfo = ScriptApp.getAuthorizationInfo(ScriptApp.authMode);
+  //SpreadsheetApp.getUi().alert(authInfo.getAuthorizationStatus());
+  if (authInfo.getAuthorizationStatus() == 'REQUIRED') {
+    SpreadsheetApp.getUi().alert(`Please authenticate this script to run here: ${authInfo.getAuthorizationUrl()}`);
+  } else {
+    SpreadsheetApp.getUi().alert(ScriptApp.getOAuthToken());
+  }
 }
 
 function loginSubmit(row)
@@ -109,41 +165,4 @@ function insertData(row)
 
     // Filling data
     sheetName.getRange(lastRow+1,column,data.length, data[0].length).setValues(data);
-}
-
-
-function submitForm1(email,number,row)
-{
-  
-  console.log('Function calling');
-  if(email!='' && row!='' && number!='')
-  {
-    var activeSS = SpreadsheetApp.getActiveSpreadsheet();
-    var sheetName = activeSS.getSheetByName('DataSheet');
-    
-    var cell = sheetName.getRange(row);
-    
-    var row = cell.getRow();
-    var column = cell.getColumn();
-
-    // Setting header for the data
-    var headerData = getHeader();
-
-    //Filling Header data
-    sheetName.getRange(row,column,headerData.length, headerData[0].length).setValues(headerData);
-    
-    var lastRow = sheetName.getLastRow();
-
-    // Table data - API data
-    var data = formatData(email,number);
-
-    // Filling data
-    sheetName.getRange(lastRow+1,column,data.length, data[0].length).setValues(data);
-    
-    return 'Data inserted';
-  }
-  else{
-    // Return the error message
-    return '<h6>Data not added</h6>';
-  }
 }
