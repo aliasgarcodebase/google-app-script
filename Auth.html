@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centered Header Image</title>
+    <title>Connnect to GetParallel</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -31,7 +31,8 @@
         .paragraph {
           color:#999999;
           font-size:14px;
-          font-weight:400;
+          font-family: Inter;
+          font-weight: 400;
         }
     </style>
 
@@ -47,17 +48,17 @@
       }
       window.addEventListener('load', preventFormSubmit);
 
-      google.script.run.withSuccessHandler(function(value) {
+      /*google.script.run.withSuccessHandler(function(value) {
         document.getElementById('responseMessage').innerHTML = value;
         }).getValueFromProperties('message');
 
       function onSuccess(responseMessage)
       {
         document.getElementById('responseMessage').innerHTML = responseMessage.message;
-      }
+      }*/
       function onSubmit()
       {
-        google.script.run.withSuccessHandler(onSuccess)
+        google.script.run.withSuccessHandler()
           .connectAuthentication();
       }
       

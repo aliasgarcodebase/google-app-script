@@ -14,6 +14,7 @@ function onOpen(e) {
  * Shows the sidebar
  */
 function showSidebar() {
+
   //clearAuthToken('token');
   //clearAuthToken('organisation');
 
